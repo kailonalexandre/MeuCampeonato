@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Api.Domain.Entities
+namespace MeuCampeonato.Domain.Entities
 {
     public abstract class BaseEntity
     {

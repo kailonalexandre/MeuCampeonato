@@ -1,6 +1,6 @@
-using Api.Data.Context;
-using Api.Domain.Entities;
-using Api.Domain.Interfaces;
+using MeuCampeonato.Data.Context;
+using MeuCampeonato.Domain.Entities;
+using MeuCampeonato.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Api.Data.Repository
+namespace MeuCampeonato.Data.Repository
 {
     public class BaseRepository<T> : IRepository<T> where T : BaseEntity
     {

@@ -1,5 +1,5 @@
-﻿using Api.Domain.Dtos;
-using Api.Domain.Entities;
+﻿using MeuCampeonato.Domain.Dtos;
+using MeuCampeonato.Domain.Entities;
 using AutoMapper;
 using Domain.Dtos;
 

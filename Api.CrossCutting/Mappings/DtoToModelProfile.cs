@@ -1,4 +1,4 @@
-﻿using Api.Domain.Dtos;
+﻿using MeuCampeonato.Domain.Dtos;
 using AutoMapper;
 using Domain.Dtos;
 using Domain.Models;

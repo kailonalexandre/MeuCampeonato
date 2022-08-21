@@ -1,6 +1,6 @@
 using System;
 
-namespace Api.Domain.Entities
+namespace MeuCampeonato.Domain.Entities
 {
     public class TeamsEntity : BaseEntity
     {

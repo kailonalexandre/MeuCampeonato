@@ -1,7 +1,7 @@
 ﻿
 using System.Collections.Generic;
 
-namespace Api.Domain.Entities
+namespace MeuCampeonato.Domain.Entities
 {
     public class GamesEntity : BaseEntity
     {

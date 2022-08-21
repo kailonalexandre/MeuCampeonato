@@ -1,4 +1,4 @@
-﻿using Api.Domain.Entities;
+﻿using MeuCampeonato.Domain.Entities;
 using AutoMapper;
 using Domain.Models;
 

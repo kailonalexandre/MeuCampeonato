@@ -1,14 +1,14 @@
-﻿using Api.Data.Context;
-using Api.Data.Repository;
-using Api.Domain.Entities;
-using Api.Domain.Repository;
+﻿using MeuCampeonato.Data.Context;
+using MeuCampeonato.Data.Repository;
+using MeuCampeonato.Domain.Entities;
+using MeuCampeonato.Domain.Repository;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Api.Data.Implementations
+namespace MeuCampeonato.Data.Implementations
 {
     public class TeamImplementation : BaseRepository<TeamsEntity>, ITeamsRepository
     {

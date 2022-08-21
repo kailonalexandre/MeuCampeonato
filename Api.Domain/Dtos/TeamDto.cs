@@ -1,7 +1,7 @@
 ﻿using Domain.Dtos;
 using System;
 
-namespace Api.Domain.Dtos
+namespace MeuCampeonato.Domain.Dtos
 {
     public class TeamDto : BaseDto
     {

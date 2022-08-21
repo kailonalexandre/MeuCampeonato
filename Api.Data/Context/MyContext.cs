@@ -1,8 +1,8 @@
-using Api.Data.Mapping;
-using Api.Domain.Entities;
+using MeuCampeonato.Data.Mapping;
+using MeuCampeonato.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace Api.Data.Context
+namespace MeuCampeonato.Data.Context
 {
     public class MyContext : DbContext
     {

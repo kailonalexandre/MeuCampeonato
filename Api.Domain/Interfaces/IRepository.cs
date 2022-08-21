@@ -1,9 +1,9 @@
-using Api.Domain.Entities;
+using MeuCampeonato.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Api.Domain.Interfaces
+namespace MeuCampeonato.Domain.Interfaces
 {
     public interface IRepository<T> where T : BaseEntity
     {

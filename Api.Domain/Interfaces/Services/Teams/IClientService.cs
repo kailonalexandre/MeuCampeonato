@@ -1,10 +1,10 @@
-using Api.Domain.Dtos;
-using Api.Domain.Entities;
+using MeuCampeonato.Domain.Dtos;
+using MeuCampeonato.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Api.Domain.Interfaces.Services.Client
+namespace MeuCampeonato.Domain.Interfaces.Services.Client
 {
     public interface IClientService
     {

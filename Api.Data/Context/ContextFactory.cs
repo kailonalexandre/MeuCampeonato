@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 
-namespace Api.Data.Context
+namespace MeuCampeonato.Data.Context
 {
     public class ContextFactory : IDesignTimeDbContextFactory<MyContext>
     {

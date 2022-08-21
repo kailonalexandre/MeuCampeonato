@@ -1,8 +1,8 @@
-﻿using Api.Domain.Entities;
-using Api.Domain.Interfaces;
+﻿using MeuCampeonato.Domain.Entities;
+using MeuCampeonato.Domain.Interfaces;
 using System.Threading.Tasks;
 
-namespace Api.Domain.Repository
+namespace MeuCampeonato.Domain.Repository
 {
     public interface IGamesRepository : IRepository<GamesEntity>
     {

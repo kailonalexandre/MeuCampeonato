@@ -1,12 +1,12 @@
-using Api.Data.Context;
-using Api.Data.Implementations;
-using Api.Data.Repository;
-using Api.Domain.Interfaces;
-using Api.Domain.Repository;
+using MeuCampeonato.Data.Context;
+using MeuCampeonato.Data.Implementations;
+using MeuCampeonato.Data.Repository;
+using MeuCampeonato.Domain.Interfaces;
+using MeuCampeonato.Domain.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Api.CrossCutting.DependencyInjection
+namespace MeuCampeonato.CrossCutting.DependencyInjection
 {
     public class ConfigureRepository
     {

@@ -1,8 +1,8 @@
-﻿using Api.Domain.Entities;
+﻿using MeuCampeonato.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Api.Data.Mapping
+namespace MeuCampeonato.Data.Mapping
 {
     public class TeamsMap : IEntityTypeConfiguration<TeamsEntity>
     {
