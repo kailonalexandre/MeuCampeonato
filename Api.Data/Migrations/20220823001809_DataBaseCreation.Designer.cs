@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Migrations
 {
     [DbContext(typeof(MyContext))]
-    [Migration("20220821202211_initialCreation")]
-    partial class initialCreation
+    [Migration("20220823001809_DataBaseCreation")]
+    partial class DataBaseCreation
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -19,43 +19,43 @@ namespace Data.Migrations
                 .HasAnnotation("ProductVersion", "3.1.16")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            modelBuilder.Entity("Api.Domain.Entities.GamesEntity", b =>
+            modelBuilder.Entity("MeuCampeonato.Domain.Entities.MatchEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
+                    b.Property<int>("Bracket")
+                        .HasColumnType("int");
+
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("FirstTeam")
+                    b.Property<int>("ScoreTeamA")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ScoreTeamB")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TeamA")
                         .IsRequired()
                         .HasColumnType("varchar(60) CHARACTER SET utf8mb4")
                         .HasMaxLength(60);
 
-                    b.Property<int>("GoalsFistTeam")
-                        .HasColumnType("int");
-
-                    b.Property<int>("GoalsSecondTeam")
-                        .HasColumnType("int");
-
-                    b.Property<string>("SecondTeam")
+                    b.Property<string>("TeamB")
                         .IsRequired()
                         .HasColumnType("varchar(60) CHARACTER SET utf8mb4")
                         .HasMaxLength(60);
-
-                    b.Property<int>("TeamKey")
-                        .HasColumnType("int");
 
                     b.Property<DateTime?>("UpdateAt")
                         .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Games");
+                    b.ToTable("Match");
                 });
 
-            modelBuilder.Entity("Api.Domain.Entities.TeamsEntity", b =>
+            modelBuilder.Entity("MeuCampeonato.Domain.Entities.TeamsEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -64,7 +64,7 @@ namespace Data.Migrations
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("TeamName")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("varchar(60) CHARACTER SET utf8mb4")
                         .HasMaxLength(60);

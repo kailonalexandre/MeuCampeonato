@@ -6,9 +6,9 @@ namespace Domain.Utils
 {
     public enum BracketEnum
     {
-        QuartasDeFinal,
+        QuarterFinals,
         SemiFinal,
-        Final,
-        Perdedores
+        EndGame,
+        Losers
     }
 }

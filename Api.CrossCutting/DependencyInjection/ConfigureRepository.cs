@@ -14,9 +14,10 @@ namespace MeuCampeonato.CrossCutting.DependencyInjection
         {
             serviceCollection.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
             serviceCollection.AddScoped<ITeamsRepository, TeamImplementation>();
+            serviceCollection.AddScoped<IMatchsRepository, MatchImplementation>();
 
             serviceCollection.AddDbContext<MyContext>(
-               options => options.UseMySql("Server=localhost;Port=3306;Database=dbAPI;Uid=root;Pwd=genesysjp")
+               options => options.UseMySql("Server=localhost;Port=3306;Database=dbTradejogos;Uid=root;Pwd=genesysjp")
            );
         }
     }

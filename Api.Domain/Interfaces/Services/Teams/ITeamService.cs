@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MeuCampeonato.Domain.Interfaces.Services.Client
 {
-    public interface IClientService
+    public interface ITeamService
     {
         Task<TeamsEntity> Get(Guid id);
         Task<IEnumerable<TeamsEntity>> GetAll();

@@ -12,7 +12,7 @@ namespace MeuCampeonato.Data.Mapping
 
             builder.HasKey(u => u.Id);
 
-            builder.Property(u => u.TeamName)
+            builder.Property(u => u.Name)
                       .IsRequired()
                       .HasMaxLength(60);
         }

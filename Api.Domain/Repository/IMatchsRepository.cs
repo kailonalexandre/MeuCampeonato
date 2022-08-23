@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace MeuCampeonato.Domain.Repository
 {
-    public interface IGamesRepository : IRepository<GamesEntity>
+    public interface IMatchsRepository : IRepository<MatchEntity>
     {
     }
 }

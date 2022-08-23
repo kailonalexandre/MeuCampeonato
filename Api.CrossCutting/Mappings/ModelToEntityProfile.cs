@@ -11,7 +11,7 @@ namespace CrossCutting.Mappings
             CreateMap<TeamsEntity, TeamsModel>()
                 .ReverseMap();
 
-            CreateMap<GamesEntity, GamesModel>()
+            CreateMap<MatchEntity, MatchsModel>()
                 .ReverseMap();
         }
     }

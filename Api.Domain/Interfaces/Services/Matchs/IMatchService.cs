@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace MeuCampeonato.Domain.Interfaces.Services.Group
 {
-    public interface IGameService
+    public interface IMatchService
     {
-        void Setup(List<TeamDto> teamDtos);
+        Task Setup(List<TeamDto> teamDtos);
     }
 }

@@ -5,7 +5,8 @@ namespace MeuCampeonato.Domain.Dtos
 {
     public class TeamDto : BaseDto
     {
-        public string TeamName { get; set; }
+        public string Name { get; set; }
+       
 
     }
 }

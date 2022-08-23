@@ -11,63 +11,104 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using static System.Net.Mime.MediaTypeNames;
+using MeuCampeonato.Domain.Repository;
+using AutoMapper;
+using Domain.Models;
+using MeuCampeonato.Domain.Entities;
+using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 
 namespace Service.Services
 {
-    public class GameService : IGameService
+    public class MatchService : IMatchService
     {
+        private readonly IMatchsRepository _matchsRepository;
+        private readonly ITeamsRepository _teamsRepository;
+        private readonly IMapper _mapper;
+
         private List<bracket> brackets = new List<bracket>();
         private Dictionary<int, TeamDto> podium = new Dictionary<int, TeamDto>();
-        public void Setup(List<TeamDto> teamDtos)
+        private Dictionary<TeamDto, int> teamScore = new Dictionary<TeamDto, int>();
+
+
+        public MatchService(IMatchsRepository matchsRepository, ITeamsRepository teamsRepository, IMapper mapper)
+        {
+            _matchsRepository = matchsRepository;
+            _teamsRepository = teamsRepository;
+            _mapper = mapper;
+        }
+
+        public async Task Setup(List<TeamDto> teamDtos)
         {
             brackets.Clear();
-            GenerateBracket(teamDtos, BracketEnum.QuartasDeFinal);
-            ComecarQuartasDeFinal();
-            ComecarSemiFinal();
-            ComecarFinal();
-            RecapMatch();
+            teamScore.Clear();
+            GenerateBracket(teamDtos, BracketEnum.QuarterFinals);
+            await SetTeams(teamDtos);
+            await StartQuarterFinal();
+            await StartSemiFinal();
+            await StartFinal();
+            await RecapMatch();
             Results();
+        }
+        private async Task SetTeams(List<TeamDto> teamDtos)
+        {
+            foreach(TeamDto team in teamDtos)
+            {
+                teamScore.Add(team, 0);
+                var teamModel = _mapper.Map<TeamsModel>(team);
+                var teamEntity = _mapper.Map<TeamsEntity>(teamModel);
+                await _teamsRepository.InsertAsync(teamEntity);
+            }
+
         }
 
         private void Results()
         {
+            Console.WriteLine();
             Console.WriteLine(@$"O Meu Campeonato terminou!.
                                 Estes são os resultados:
-                                Primeiro lugar: {podium[1].TeamName}
-                                Segundo lugar: {podium[2].TeamName}
-                                Terceiro lugar: {podium[3].TeamName}");
+                                Primeiro lugar: {podium[1].Name}
+                                Segundo lugar: {podium[2].Name}
+                                Terceiro lugar: {podium[3].Name}");
                                 
         }
 
-        private void ComecarFinal() 
+        private async Task StartFinal() 
         {
             var winner = new TeamDto();
             var loser = new TeamDto();
-            foreach (var bracket in brackets.Where(p => p.Bracket == BracketEnum.Final).ToList())
+            Console.WriteLine("\r\nComeçando a final!");
+            foreach (var bracket in brackets.Where(p => p.Bracket == BracketEnum.EndGame).ToList())
             {
-                winner = StartMatchs(bracket);
+                Console.WriteLine($"\r\n{bracket.TeamA.Name} vs {bracket.TeamB.Name}");
+                winner = await StartMatchs(bracket);
+                loser = winner == bracket.TeamA ? bracket.TeamB : bracket.TeamA;
             }
             podium.Add(1, winner);
             podium.Add(2, loser);
         }
 
-        private void RecapMatch()
+        private async Task RecapMatch()
         {
             var winner = new TeamDto();
-            foreach (var bracket in brackets.Where(p => p.Bracket == BracketEnum.Perdedores).ToList())
+            Console.WriteLine("\r\nComeçando a repescagem!");
+            foreach (var bracket in brackets.Where(p => p.Bracket == BracketEnum.Losers).ToList())
             {
-                winner = StartMatchs(bracket);
+               Console.WriteLine($"\r\n{bracket.TeamA.Name} vs {bracket.TeamB.Name}");
+                winner = await StartMatchs(bracket);
             }
             podium.Add(3, winner);
         }
 
-        private void ComecarSemiFinal()
+        private async Task StartSemiFinal()
         {
             List<TeamDto> Winners = new List<TeamDto>();
             List<TeamDto> Losers = new List<TeamDto>();
+            Console.WriteLine("\r\nComeçando as semifinais!");
             foreach (var bracket in brackets.Where(p => p.Bracket == BracketEnum.SemiFinal).ToList())
             {
-                var winner = StartMatchs(bracket);
+               Console.WriteLine($"\r\n{bracket.TeamA.Name} vs {bracket.TeamB.Name}");
+                var winner = await StartMatchs(bracket);
                 Winners.Add(winner);
                 Losers.Add(bracket.TeamA == winner ? bracket.TeamB : bracket.TeamA);
             }
@@ -79,23 +120,25 @@ namespace Service.Services
             {
                 TeamA = winnersArray[0],
                 TeamB = winnersArray[1],
-                Bracket = BracketEnum.Final
+                Bracket = BracketEnum.EndGame
             });
 
             brackets.Add(new bracket()
             {
                 TeamA = losersArray[0],
                 TeamB = losersArray[1],
-                Bracket = BracketEnum.Perdedores
+                Bracket = BracketEnum.Losers
             });
         }
 
-        private void ComecarQuartasDeFinal()
+        private async Task StartQuarterFinal()
         {
             List<TeamDto> Winners = new List<TeamDto>();
-            foreach (var bracket in brackets.Where(p => p.Bracket == BracketEnum.QuartasDeFinal).ToList())
+            Console.WriteLine("\r\nComeçando as quartas de finais!");
+            foreach (var bracket in brackets.Where(p => p.Bracket == BracketEnum.QuarterFinals).ToList())
             {
-                var winner = StartMatchs(bracket);
+               Console.WriteLine($"\r\n{bracket.TeamA.Name} vs {bracket.TeamB.Name}");
+                var winner = await StartMatchs(bracket);
                 Winners.Add(winner);
             }
 
@@ -183,20 +226,49 @@ namespace Service.Services
         /// <summary>
         /// Começa as partidas e retorna o time vencedor.
         /// </summary>
-        public TeamDto StartMatchs(bracket Bracket)
+        public async Task <TeamDto> StartMatchs(bracket Bracket, bool Draw = false)
         {
             string[] scores = ExecutePythonScript();
             
-            GamesDto Match = new GamesDto();
-            Match.FirstTeam = Bracket.TeamA.TeamName;
-            Match.SecondTeam = Bracket.TeamB.TeamName;
-            Match.GoalsFistTeam = Convert.ToInt32(scores[0]);
-            Match.GoalsSecondTeam = Convert.ToInt32(scores[1]);
-            
-            //TODO:Desempate
-            //TODO:Salvar no banco
-            return Match.GoalsFistTeam > Match.GoalsSecondTeam ? Bracket.TeamA : Bracket.TeamB; 
+            MatchDto Match = new MatchDto();
+            Match.TeamA = Bracket.TeamA.Name;
+            Match.TeamB = Bracket.TeamB.Name;
+            Match.Bracket = Bracket.Bracket;
+            Match.ScoreTeamA = Convert.ToInt32(scores[0]);
+            Match.ScoreTeamB = Convert.ToInt32(scores[1]);
+            var winner = Match.ScoreTeamA > Match.ScoreTeamB ? Bracket.TeamA : Bracket.TeamB;
+            var loser = winner == Bracket.TeamA ? Bracket.TeamB : Bracket.TeamA;
+
+            if (teamScore.ContainsKey(winner))
+            {
+                teamScore[winner] += winner == Bracket.TeamA ? Match.ScoreTeamA : Match.ScoreTeamB;
+                teamScore[winner] -= winner == Bracket.TeamA ? Match.ScoreTeamB : Match.ScoreTeamA;  
+            }
+            if (teamScore.ContainsKey(loser))
+            {
+                teamScore[loser] += loser == Bracket.TeamA ? Match.ScoreTeamA : Match.ScoreTeamB;
+                teamScore[loser] -= loser == Bracket.TeamA ? Match.ScoreTeamB : Match.ScoreTeamA;
+            }
+
+            if (Match.ScoreTeamA == Match.ScoreTeamB)
+            {
+                if (Draw)
+                    winner = DrawMatch(Bracket);
+                else
+                    winner = await StartMatchs(Bracket, true);
+            }
+            var matchModel = _mapper.Map<MatchsModel>(Match);
+            var matchEntity = _mapper.Map<MatchEntity>(matchModel);
+            await _matchsRepository.InsertAsync(matchEntity);
+
+            Console.WriteLine($"Vencedor {winner.Name} | Pontuação {teamScore[winner]}");
+            Console.WriteLine($"Perdedor {loser.Name} | Pontuação {teamScore[loser]}");
+
+            return winner;
+
         }
+        public TeamDto DrawMatch(bracket bracket) => bracket.TeamA.CreateAt < bracket.TeamB.CreateAt ? bracket.TeamA : bracket.TeamB;
+        
 
 
         /// <summary>
