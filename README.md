@@ -6,6 +6,8 @@ Banco de dados utilizado: **MySql**.
 
 Antes de iniciar a aplicação abra o terminal pressionando Ctrl + ' e digite: 
 
+``cd Api.Data`` e pressione Enter
+
 ``dotnet ef migrations add DatabaseCreation`` e pressione Enter.
 
 ``dotnet ef database update`` e pressione Enter.
